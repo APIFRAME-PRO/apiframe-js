@@ -1,0 +1,28 @@
+{
+  "name": "apiframe-js",
+  "version": "1.0.0",
+  "description": "Node.js library for APIFRAME.PRO",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/APIFRAME-PRO/apiframe-js"
+  },
+  "keywords": [
+    "apiframe",
+    "midjourney client",
+    "midjourney api",
+    "api midjourney",
+    "midjourney ai api",
+    "midjourney bot api",
+    "api midjourney api",
+    "api midjourney bot",
+    "midjourney api access"
+  ],
+  "author": "APIFRAME.PRO",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "form-data": "^4.0.0"
+  }
+}
