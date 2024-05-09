@@ -28,13 +28,11 @@ class ApiframeClient {
         webhook_url = undefined,
         webhook_secret = undefined,
     }) {
-        try {            
+        try {
             Joi.assert(
                 prompt,
-                Joi.string()
-                    .min(3)
-                    .max(1000),
-                    new Error('\n[ERROR] "prompt" should be a string (min: 3, max: 1000)\n'),
+                Joi.string().min(3).max(1000),
+                new Error('\n[ERROR] "prompt" should be a string (min: 3, max: 1000)\n'),
             );
             Joi.assert(
                 aspect_ratio,
@@ -45,7 +43,7 @@ class ApiframeClient {
             Joi.assert(
                 process_mode,
                 Joi.string().valid('fast', 'turbo').required(),
-                new Error('\n[ERROR] "process_mode" should be fast or turbo\n')
+                new Error('\n[ERROR] "process_mode" should be fast or turbo\n'),
             );
             Joi.assert(
                 webhook_url,
@@ -91,7 +89,47 @@ class ApiframeClient {
                 ...responseData,
             };
         } catch (error) {
-            console.log("\n[ERROR] " + error?.response?.data?.errors?.at(0)?.msg + " \n");
+            console.log('\n[ERROR] ' + error?.response?.data?.errors?.at(0)?.msg + ' \n');
+            return;
+        }
+    }
+
+    /**
+     * https://docs.apiframe.pro/api-endpoints/fetch
+     *
+     * Get the result/status of a submitted task.
+     *
+     */
+    async fetch({ task_id }) {
+        try {
+            const data = JSON.stringify({
+                task_id,
+            });
+
+            const config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: `${this.baseURL}/fetch`,
+                headers: {
+                    Authorization: this.apiKey,
+                    'Content-Type': 'application/json',
+                },
+                data: data,
+            };
+
+            const { data: responseData } = await axios.request(config);
+
+            if (this.verbose) {
+                console.log({
+                    response: responseData,
+                });
+            }
+
+            return {
+                ...responseData,
+            };
+        } catch (error) {
+            console.log('\n[ERROR] ' + error?.response?.data?.errors?.at(0)?.msg + ' \n');
             return;
         }
     }
