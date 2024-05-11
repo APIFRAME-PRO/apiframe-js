@@ -1,6 +1,6 @@
 {
   "name": "apiframe-js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Node.js library for APIFRAME.PRO",
   "main": "index.js",
   "scripts": {},
@@ -22,7 +22,6 @@
   "author": "APIFRAME.PRO",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.6.8",
-    "form-data": "^4.0.0"
+    "axios": "^1.6.8"
   }
 }

@@ -1,5 +1,4 @@
 const axios = require('axios').default;
-const FormData = require('form-data');
 
 class ApiframeClient {
     constructor(apiKey, verbose = false) {
