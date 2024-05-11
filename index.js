@@ -13,11 +13,16 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/imagine
+     * Generate an image using a text prompt. This is the /imagine command on Discord.
      *
-     *  Generate an image using a text prompt. This is the /imagine command on Discord.
+     * @param {Object} options - The options object.
+     * @param {string} options.prompt - The text prompt for Midjourney AI.
+     * @param {string} [options.aspect_ratio='1:1'] - Aspect ratio for the image. Default: 1:1.
+     * @param {string} [options.process_mode='fast'] - Generation mode to use for the generation. Can be Fast or Turbo.
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
      *
-     * @returns {Promise<string>} task_id
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async imagine({
         prompt,
@@ -64,11 +69,15 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/upscales/upscale-1x
-     *
      *  Upscale one of the 4 generated images by the Imagine endpoint to get a single image.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} options.index - The index of the image to upscale. Can be 1, 2, 3 or 4
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async upscale_1x({
         parent_task_id,
@@ -113,11 +122,15 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/upscales/upscale-creative-and-subtle
-     *
      *  The Upscale (Subtle) option doubles the size of your image and keeps details very similar to the original adds Upscale (Creative) adds details to the image. Of course you first need to Upscale 1x.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the image to upscale, you get it from the /upscale-1x request.
+     * @param {string} options.type - The type of upscale. Can be subtle or creative
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async upscale_alt({
         parent_task_id,
@@ -162,11 +175,15 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/upscales/upscale-2x-and-4x
-     *
      *  Upscale any image to higher resolution, this is not from Midjourney. Image must not be larger than 2048x2048.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the image to upscale.
+     * @param {string} options.type - The type of upscale. Can be 2x or 4x.
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async upscale_highres({
         parent_task_id,
@@ -211,11 +228,16 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/reroll
-     *
      *  Reroll to create new images from a previous Imagine task.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} [options.prompt] - Prompt for re-drawing default value: original prompt from parent task
+     * @param {string} [options.aspect_ratio="1:1"] - Aspect ratio for the image. Default: 1:1
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async reroll({
         parent_task_id,
@@ -262,11 +284,17 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/variations
-     *
      *  Create 4 new variations of one of the 4 generated images by the Imagine request.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} options.index - The index of the image to create variations from. Can be 1, 2, 3, 4, "strong" or "subtle"
+     * @param {string} [options.prompt] - Drawing prompt default value: prompt from the parent task
+     * @param {string} [options.aspect_ratio="1:1"] - Aspect ratio for the image. Default: 1:1
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async variations({
         parent_task_id,
@@ -315,11 +343,16 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/inpaint
-     *
      *  Redraw a selected area of an image. Of course you first need to Upscale 1x. (Vary Region)
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} options.mask - Base64 encoding of the image corresponding to the selected area
+     * @param {string} [options.prompt] - Drawing prompt for selected areas
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async inpaint({
         parent_task_id,
@@ -366,11 +399,17 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/outpaint
-     *
      *  The outpaint endpoint enlarges an image's canvas beyond its original size while keeping the contents of the original image unchanged. Of course you first need to Upscale 1x. (Zoom Out)
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} options.zoom_ratio -  Can be 1, 1.5, 2 or  (1, 2]
+     * @param {string} [options.aspect_ratio="1:1"] - Aspect ratio for the image. Default: 1:1
+     * @param {string} [options.prompt] - Drawing prompt for new areas
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async outpaint({
         parent_task_id,
@@ -419,11 +458,16 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/pan
-     *
      *  Broadens the image canvas in a specific direction, keeping the original content intact and using prompts and the original image as guides for filling the expanded area. You first need to Upscale 1x
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.parent_task_id - The task ID of the original task
+     * @param {string} options.direction -  Image expansion direction. Can be: up, down, left or right
+     * @param {string} [options.prompt] - Drawing prompt for new areas
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async pan({
         parent_task_id,
@@ -470,11 +514,15 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/describe
-     *
      *  Writes four example prompts based on an image you upload. This is the same as using the /describe command in Discord.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.image_url - The URL of the image you want to describe. Should be accessible on Internet.
+     * @param {string} [options.process_mode='fast'] - Generation mode to use for the generation. Can be Fast or Turbo.
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async describe({
         image_url,
@@ -519,11 +567,16 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/blend
-     *
      *  Blend multiple images into one image.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {[string]} options.image_urls - The URLs of the images to blend. Min 2, max 5
+     * @param {string} [options.process_mode='fast'] - Generation mode to use for the generation. Can be Fast or Turbo.
+     * @param {string} [options.dimension='square'] - Can be square, portrait or landscape. square by Default.
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async blend({
         image_urls,
@@ -570,11 +623,14 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/seed
-     *
      *  Get the seed of a generated image.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.task_id - The task_id of the task
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async seed({ task_id, webhook_url = undefined, webhook_secret = undefined }) {
         try {
@@ -613,11 +669,15 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/faceswap
-     *
      *  Swap the face on a target image with the face on a provided image. Each image must contain only one face.
      *
-     * @returns {Promise<string>} task_id
+     * @param {Object} options - The options object.
+     * @param {string} options.target_image_url - The URL of the image where the face will be swapped
+     * @param {string} options.swap_image_url - The url of the image where the new face should be taken from.
+     * @param {string} [options.webhook_url] - The final result of this task will be posted at this URL.
+     * @param {string} [options.webhook_secret] - Will be passed as x-webhook-secret in the webhook call headers for authentication.
+     *
+     * @returns {Promise<{task_id, errors: [{msg: string}]}>}
      */
     async faceswap({
         target_image_url,
@@ -662,9 +722,10 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/fetch
-     *
      * Get the result/status of a submitted task.
+     *
+     * @param {Object} options - The options object.
+     * @param {string} options.task_id - The task_id of the task
      *
      * @returns {Promise<object>}
      *
@@ -704,9 +765,10 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/fetch-many
-     *
      * Get the results/statuses of multiple tasks using their task_id.
+     * 
+     * @param {Object} options - The options object.
+     * @param {[string]} options.task_ids - The task id of the tasks, min 2 and max 20
      *
      * @returns {Promise<[object]>}
      *
@@ -746,14 +808,12 @@ class ApiframeClient {
     }
 
     /**
-     * https://docs.apiframe.pro/api-endpoints/account
-     *
      * Get details about your account: credits remaining, stats, etc..
      *
-     * @returns {Promise<object>}
+     * @returns {Promise<{email: string, credits: number, plan: string, next_billing_date: string|null, total_images: number}>}
      *
      */
-    async fetch_many() {
+    async account() {
         try {
             const config = {
                 method: 'get',
